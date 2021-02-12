@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Easy Stage{% endblock %}
+
+{% block body %}
+    <div class="container cent">
+    <div class="row cent justify-content-center align-items-center">
+        
+{% if not app.user %} 
+        <h1>Veuillez vous connecter</h1>
+{% else %}
+    <div class="col-12">
+        <h2 class="text-info">Ajouter une promo</h2>
+            {{ form_start(promoForm) }}
+                <div class="form-group">
+                    {{ form_row(promoForm.nom, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(promoForm.ville, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(promoForm.date, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <button type="submit" class="btn btn-success">Ajouter</button>
+            {{ form_end(promoForm) }}
+    </div>
+    <div class="col-12">
+    <h2 class="text-info">Liste des promotions</h2>
+        <table class="table table-striped table-responsive-lg" >
+        <thead>
+            <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Ville</th>
+            <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for promotion in promotions %}
+                <tr>  
+                <th scope="row">{{ promotion.id }}</th>
+                <td>{{ promotion.nom }}</td>
+                <td>{{ promotion.ville }}</td>
+                <td>{{ promotion.date|date('d/m/Y') }}</td>
+                <td><a href="{{path('admin_detailPromo', {'id' : promotion.id})}}"><button class="btn btn-info">Voir la promotion</button></a></td>
+                </tr>
+            {% else %}
+
+                <tr>
+                    <td> Aucune promotions n'est enregistré dans la base de donnée</td>
+                </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %} 
+        </div>
+    </div>
+</div>
+{% endblock %}

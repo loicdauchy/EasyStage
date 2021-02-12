@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add Skill{% endblock %}
+
+{% block body %}
+
+{% if not app.user %} 
+
+    <h2>Vous n'avez pas les droits</h2>
+    <a href=" {{ path('security_login') }} "><button class="btn btn-primary">Connexion</button></a>
+
+{% else %}
+<div class="container cent">
+    <div class="row cent justify-content-center align-items-center">
+        <div class="col-12">
+            <h2>Ajouts de nouvelles compétences</h2>
+            {{ form_start(addComp) }}
+                <div class="form-group">
+                    {{form_row(addComp.nom, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <button type="submit" class="btn btn-success">Ajouter</button>
+            {{ form_end(addComp) }}
+        </div>
+        <div class="col-12" style="margin-top:-200px">
+            <h2>Mes Compétences:</h2>
+            {{ form_start(compForm) }}
+                <div class="form-group">
+                    {{ form_row(compForm.competences, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <button type="submit" class="btn btn-success">Ajouter</button>
+            {{ form_end(compForm) }}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

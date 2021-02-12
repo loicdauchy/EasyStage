@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ detailEntreprise.nom }} - détails{% endblock %}
+
+{% block body %}
+{% if not app.user %} 
+
+    <h2>Vous n'avez pas les droits</h2>
+    <a href=" {{ path('security_login') }} "><button class="btn btn-primary">Connexion</button></a>
+
+{% else %}
+<div class="container cent">
+    <div class="row cent justify-content-center align-items-center">
+        <div class="col-12 d-flex flex-column justify-content-center align-items-center">
+            <h2>Détails de l'entreprise <span style="color:green;">{{ detailEntreprise.nom }}</span></h2>
+            <h4><span class="text-info">Adresse: </span>{{ detailEntreprise.adresse }}</h4>
+            <h4><span class="text-info">Code Postal: </span>{{ detailEntreprise.CP }}</h4>
+            <h4><span class="text-info">Ville: </span>{{ detailEntreprise.ville }}</h4>
+            <h4><span class="text-info">Téléphone: </span>{{ detailEntreprise.tel }}</h4>
+            <h4><span class="text-info">E-mail: </span>{{ detailEntreprise.mail }}</h4>
+            <a href="{{ detailEntreprise.website }}"><button class="btn btn-success">Voir le site</button></a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

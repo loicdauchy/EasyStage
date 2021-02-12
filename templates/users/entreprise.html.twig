@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Entreprise - EasyStage{% endblock %}
+
+{% block body %}
+
+{% if not app.user %} 
+
+    <h2>Vous n'avez pas les droits</h2>
+    <a href=" {{ path('security_login') }} "><button class="btn btn-primary">Connexion</button></a>
+
+{% else %}
+<div class="container centHeight">
+    <div class="row centHeight justify-content-center align-items-center">
+        <div class="col-12">
+            <h2>Ajouter une entreprise:</h2>
+            {{ form_start(entrepriseForm) }}
+                <div class="form-group">
+                    {{ form_row(entrepriseForm.nom, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(entrepriseForm.adresse, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(entrepriseForm.CP, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(entrepriseForm.ville, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(entrepriseForm.tel, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(entrepriseForm.mail, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(entrepriseForm.website, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <button type="submit" class="btn btn-success">Ajouter</button>
+            {{ form_end(entrepriseForm) }}
+        </div>
+        <div class="col-12">
+            <h2>Liste des entreprises:</h2>
+            <table class="table table-striped" >
+                <thead>
+                    <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">nom</th>
+                    <th scope="col">ville</th>
+                    <th scope="col">website</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entreprise in entreprises %}
+                        <tr>  
+                        <th scope="row">{{ entreprise.id }}</th>
+                        <td>{{ entreprise.nom }}</td>
+                        <td>{{ entreprise.ville }}</td>
+                        <td><a href="{{ entreprise.website }}" target="_blank"><button class="btn btn-primary">Voir le site</button></a></td>
+                        <td><a href="{{ path('users_detailEntreprise', {'id': entreprise.id}) }}"><button class="btn btn-warning">Détails</button></a></td>
+                        </tr>
+                    {% else %}
+
+                        <tr>
+                            <td> Aucune entreprises n'est enregistré dans la base de donnée</td>
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

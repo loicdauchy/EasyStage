@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Easy Stage{% endblock %}
+
+{% block body %}
+    <div class="container cent">
+    <div class="row cent justify-content-center align-items-center">
+        <div class="col-12">
+{% if not app.user %} 
+        <h1>Veuillez vous connecter</h1>
+{% else %}
+        <a href="{{ path('admin_users') }}"><button class="btn btn-warning">Utilisateurs</button></a>
+        {{ form_start(compForm) }}
+                <div class="form-group">
+                    {{ form_row(compForm.nom, {'attr': {'class': 'form-control'}, 'label': 'Ajouter une nouvelle compténce'}) }}
+                </div>
+                <button type="submit" class="btn btn-success">Ajouter</button>
+        {{ form_end(compForm) }}
+{% endif %} 
+        </div>
+    </div>
+</div>
+{% endblock %}

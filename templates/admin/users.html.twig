@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - users{% endblock %}
+
+{% block body %}
+    <div class="container cent">
+    <div class="row cent justify-content-center align-items-center">
+        <div class="col-12">
+{% if not app.user %} 
+
+    <h2>Vous n'avez pas les droits</h2>
+    <a href=" {{ path('security_login') }} "><button class="btn btn-primary">Connexion</button></a>
+
+{% else %}
+    <h1 id="table">Liste de tout les utilisateurs:</h1>
+    <table class="table table-striped" >
+        <thead>
+            <tr>
+            <th scope="col">Id</th>
+            <th scope="col">nom</th>
+            <th scope="col">prénom</th>
+            <th scope="col">promotion</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>  
+                <th scope="row">{{ user.id }}</th>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.promo.nom }}</td>
+                <td><a href="{{path('admin_editeU', {'id' : user.id})}}"><button class="btn btn-warning">Editer</button></a></td>
+                <td><a href="{{path('admin_deleteU', {'id' : user.id})}}"><button class="btn btn-danger">Delete</button></a></td>
+                </tr>
+            {% else %}
+
+                <tr>
+                    <td> Aucun utilisateurs n'est enregistré dans la base de donnée</td>
+                </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %} 
+        </div>
+    </div>
+</div>
+{% endblock %}

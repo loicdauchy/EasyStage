@@ -1,0 +1,76 @@
+.centHeight{
+    min-height: 100vh;
+    margin-top: 20vh;
+    margin-bottom: 10vh;
+}
+.cent{
+    min-height: 100vh !important;
+}
+
+footer{
+    width: 100%;
+    color: white;
+    background: rgb(51, 47, 47);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20vh;
+}
+.upload{
+    border: 1px dashed rgb(56, 51, 51) !important;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.upload::placeholder{
+    color: rgb(52, 150, 52);
+}
+
+
+/* GITHUB API CSS */
+
+div#github-widget{
+    width: 80%;
+    border: 1px solid rgb(214, 189, 45);
+    border-radius: 10px 10px 10px 10px;
+    padding: 20px;
+}
+div#github-widget > .profile{
+    border-bottom: 1px solid rgb(214, 189, 45);
+}
+div#github-widget > .profile > img{
+    width: 20%;
+}
+
+.profile > .name{
+    margin-left: 20px;
+    font-size: 2rem;
+}
+.repos > a{
+    width: 100% !important;
+    margin: 5px 0px 5px 0px;
+    color: rgb(255, 187, 0);
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.repos > a:hover{
+    transition: 0.3s ease-in;
+    background: rgb(255, 187, 0);
+    color: #272b30;
+}
+.content-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.followers{
+    margin-left: 10px;
+}
+.languages{
+    list-style-type: none;
+    padding: 0;
+}
