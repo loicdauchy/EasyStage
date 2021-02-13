@@ -8,7 +8,7 @@
 }
 
 footer{
-    width: 100%;
+    min-width: 100%;
     color: white;
     background: rgb(51, 47, 47);
     display: flex;
@@ -73,4 +73,9 @@ div#github-widget > .profile > img{
 .languages{
     list-style-type: none;
     padding: 0;
+}
+
+.blogShort{ 
+    border-bottom:1px solid #ddd;
+    
 }

@@ -38,7 +38,8 @@ class UsersController extends AbstractController
             $manager->flush();
         }
         return $this->render('users/index.html.twig', [
-            'infoForm' => $form->createView()
+            'infoForm' => $form->createView(),
+            'user' => $user
         ]);
     }
 

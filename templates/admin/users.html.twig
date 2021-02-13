@@ -28,7 +28,11 @@
                 <th scope="row">{{ user.id }}</th>
                 <td>{{ user.nom }}</td>
                 <td>{{ user.prenom }}</td>
-                <td>{{ user.promo.nom }}</td>
+                {% if user.promo == null %}
+                    <td class="text-success">Entreprise</td>
+                {% else %}
+                    <td>{{ user.promo.nom }}</td>
+                {% endif %}
                 <td><a href="{{path('admin_editeU', {'id' : user.id})}}"><button class="btn btn-warning">Editer</button></a></td>
                 <td><a href="{{path('admin_deleteU', {'id' : user.id})}}"><button class="btn btn-danger">Delete</button></a></td>
                 </tr>

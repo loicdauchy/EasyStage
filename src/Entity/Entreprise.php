@@ -62,6 +62,7 @@ class Entreprise
     public function __construct()
     {
         $this->candidatures = new ArrayCollection();
+        $this->annonces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -182,4 +183,5 @@ class Entreprise
 
         return $this;
     }
+
 }

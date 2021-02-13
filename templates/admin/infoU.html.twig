@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{user.prenom}} {{user.nom}} - Infos - Easy Stage{% endblock %}
+
+{% block body %}
+    <div class="container centHeight">
+    <div class="row centHeight justify-content-center align-items-center">
+        
+{% if not app.user %} 
+        <h1>Veuillez vous connecter</h1>
+{% else %}
+        <h1 class="col-12 mb-5">Fiche de l'apprenant: <span class="text-info">{{user.prenom}} {{user.nom}}</span></h1>
+        <div class="col-12 col-md-6" style="background:url('{{user.avatar}}');background-size:cover;background-position:center;min-height:50vh;"></div>
+        <div class="col-12 col-md-6">
+            <h3>Pseudo: {{ user.username }}</h3>
+            <p>E-mail: {{ user.email }}</p>
+            <p>Adresse: {{ user.adresse }}</p>
+            <p>Code postal: {{ user.CP}}</p>
+            <p>Ville: {{ user.ville }}</p>
+            <p>Téléphone: {{ user.tel }}</p>
+            <p>Promotion: {{ user.promo.nom }}</p>
+            <a href="{{user.portfolio}}"><button class="btn btn-info">Portfolio</button></a>
+            <a href="{{user.github}}"><button class="btn btn-info">Github</button></a>
+            <a href="{{user.CV}}"><button class="btn btn-info">CV</button></a>
+            <p>Mobile: 
+                {% if user.mobile == 0 %}
+                Non
+                {% else %}
+                Oui
+                {% endif %}
+            </p>
+            <p>Zone de mobilité:
+                {% if user.mobileZone == 0 %}
+                Toute la france
+                {% elseif user.mobileZone == 1 %}
+                Dans ma région
+                {% else %}
+                Dans mon département
+                {% endif %}
+            </p>
+            <p>Situation:
+                {% if user.situation == 0 %}
+                <span class="text-danger">Aucun entretient ou stage trouvé</span>
+                {% elseif user.situation == 1 %}
+                <span class="text-info">Entretient prévu</span>
+                {% else %}
+                <span class="text-success">Stage trouvé</span>
+                {% endif %}
+            </p>
+            
+        </div>
+        <div class="col-12 d-flex justify-content-center align-items-center mt-5">
+            <ul class="list-group col-12 col-lg-4 text-center">
+                <li class="list-group-item active text-info font-weight-bold">Compétences</li>
+                {% for competence in user.competences %}
+                    <li class="list-group-item">{{ competence.nom }}</li>
+                {% else %}
+                    <li class="list-group-item">Aucune compétences enregistré</li>
+                {% endfor %}         
+            </ul>
+        </div>
+        <a href="{{path('admin_editeU', {'id' : user.id})}}"><button class="btn btn-warning mt-5">Modifier</button></a>
+        <div class="col-12 d-flex justify-content-center align-items-center flex-column mt-5">
+            <h2 class="text-info mb-5">Profil Github</h2>
+            <div class="content-section">
+            <!-- Widget template -->
+                <div id="github-widget" data-username="{{ user.pseudoGithub }}"></div>
+            </div>
+        </div>
+
+         <div class="col-12 mt-5">
+        <h2>Liste des candidatures de <span style="color:green;">{{ user.prenom }}  {{ user.nom }}</span></h2>
+            <table class="table table-striped table-responsive-xl" >
+                <thead>
+                    <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Entreprise</th>
+                    <th scope="col">Demande</th>
+                    <th scope="col">Relance</th>
+                    <th scope="col">RDV</th>
+                    <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                    {% for candidature in candidatures %}
+                        <tr>
+                            {% if candidature.status == 0 %}  
+                                <th scope="row">{{ candidature.id }}</th>
+                            {% elseif candidature.status == 1 %}
+                                <th scope="row" class="bg-warning">{{ candidature.id }}</th>
+                            {% elseif candidature.status == 2 %}
+                                <th scope="row" class="bg-success">{{ candidature.id }}</th>
+                            {% elseif candidature.status == 3 %}
+                                <th scope="row" class="bg-danger">{{ candidature.id }}</th>
+                            {% endif %}
+                            <td>{{ candidature.entreprise.nom }}</td>
+                            <td>{{ candidature.requestDate|date('d/m/Y') }}</td>
+                            {% if candidature.relanceDate == null %}
+                                <td></td>
+                            {% else %}
+                                <td>{{ candidature.relanceDate|date('d/m/Y') }}</td>
+                            {% endif %}
+                            {% if candidature.meetingDate == null %}
+                                <td></td>
+                            {% else %}
+                                <td>{{ candidature.meetingDate|date('d/m/Y') }}</td>
+                            {% endif %}
+                            {% if candidature.status == 0 %}
+                                <td>En attente</td>
+                            {% elseif candidature.status == 1 %}
+                                <td>Relancée</td>
+                            {% elseif candidature.status == 2 %}
+                                <td>Positive</td>
+                            {% elseif candidature.status == 3 %}
+                                <td>Négative</td>
+                            {% endif %}
+                            <td><a href="{{ path('users_detailEntreprise', {'id': candidature.entreprise.id}) }}"><button class="btn btn-primary">Voir l'entreprise</button></a></td>
+                            <td><a href="{{ path('users_upCandidature', {'id': candidature.id}) }}"><button class="btn btn-warning">Mettre à jour</button></a></td>
+                        </tr>
+                    {% else %}
+
+                        <tr>
+                            <td> Aucune candidature n'est enregistré pour l'utilisateur {{ user.prenom }} {{ user.nom }}</td>
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+{% endif %} 
+        </div>
+    </div>
+</div>
+
+{% endblock %}

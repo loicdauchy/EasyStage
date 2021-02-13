@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{user.prenom}} {{user.nom}} - Infos - Easy Stage{% endblock %}
+
+{% block body %}
+    <div class="container centHeight">
+    <div class="row centHeight justify-content-center align-items-center">
+        
+{% if not app.user %} 
+        <h1>Veuillez vous connecter</h1>
+{% else %}
+        <h1 class="col-12 mb-5">Fiche de l'apprenant: <span class="text-info">{{user.prenom}} {{user.nom}}</span></h1>
+        <div class="col-12 col-md-6" style="background:url('{{user.avatar}}');background-size:cover;background-position:center;min-height:50vh;"></div>
+        <div class="col-12 col-md-6">
+            <h3>Pseudo: {{ user.username }}</h3>
+            <p>E-mail: {{ user.email }}</p>
+            <p>Adresse: {{ user.adresse }}</p>
+            <p>Code postal: {{ user.CP}}</p>
+            <p>Ville: {{ user.ville }}</p>
+            <p>Téléphone: {{ user.tel }}</p>
+            <p>Promotion: {{ user.promo.nom }}</p>
+            <a href="{{user.portfolio}}"><button class="btn btn-info">Portfolio</button></a>
+            <a href="{{user.github}}"><button class="btn btn-info">Github</button></a>
+            <a href="{{user.CV}}"><button class="btn btn-info">CV</button></a>
+            <p>Mobile: 
+                {% if user.mobile == 0 %}
+                Non
+                {% else %}
+                Oui
+                {% endif %}
+            </p>
+            <p>Zone de mobilité:
+                {% if user.mobileZone == 0 %}
+                Toute la france
+                {% elseif user.mobileZone == 1 %}
+                Dans ma région
+                {% else %}
+                Dans mon département
+                {% endif %}
+            </p>
+            <p>Situation:
+                {% if user.situation == 0 %}
+                <span class="text-danger">Aucun entretient ou stage trouvé</span>
+                {% elseif user.situation == 1 %}
+                <span class="text-info">Entretient prévu</span>
+                {% else %}
+                <span class="text-success">Stage trouvé</span>
+                {% endif %}
+            </p>
+            
+        </div>
+        <div class="col-12 d-flex justify-content-center align-items-center mt-5">
+            <ul class="list-group col-12 col-lg-4 text-center">
+                <li class="list-group-item active text-info font-weight-bold">Compétences</li>
+                {% for competence in user.competences %}
+                    <li class="list-group-item">{{ competence.nom }}</li>
+                {% else %}
+                    <li class="list-group-item">Aucune compétences enregistré</li>
+                {% endfor %}         
+            </ul>
+        </div>
+        <div class="col-12 d-flex justify-content-center align-items-center flex-column mt-5">
+            <h2 class="text-info mb-5">Profil Github</h2>
+            <div class="content-section">
+            <!-- Widget template -->
+                <div id="github-widget" data-username="{{ user.pseudoGithub }}"></div>
+            </div>
+        </div>
+
+{% endif %} 
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -33,6 +33,34 @@ class UserRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    /**
+     * @return User[] Returns an array of User objects
+     */    
+    public function findStagiaire()
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles LIKE :val')
+            ->setParameter('val', '%ROLE_STAGIAIRE%')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return User[] Returns an array of User objects
+     */    
+    public function searchStagiaire($value)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles LIKE :val')
+            ->setParameter('val', '%ROLE_STAGIAIRE%')
+            ->andWhere('u.Ville LIKE :ville')
+            ->setParameter('ville', '%'.$value['ville'].'%')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     
 
     /*

@@ -9,9 +9,9 @@
 
 {% block body %}
 
-<div class="container cent">
-    <div class="row cent justify-content-center align-items-center">
-        <div class="col-12">
+<div class="container centHeight">
+    <div class="row centHeight justify-content-center align-items-center">
+        <div class="col-12 d-flex flex-column justify-content-center align-items-center">
 {% if not app.user %} 
             <h2><span style="color:green;">Connexion</span></h2>
                 <form action="{{ path('security_login') }}" method="POST">
@@ -28,6 +28,24 @@
 
 {% else %}
         <H1 class="text-center">Bienvenue sur Easy Stage</H1>
+        <h2 class="text-center text-info">{{app.user.prenom}}</h2>
+        {% for annonce in annonces %}
+
+            <div class="col-md-10 blogShort mx-5 my-5">
+                     <h2>{{annonce.titre}}</h2>
+                     <img src="{{annonce.entreprise.avatar}}" alt="post img" class="pull-left img-responsive thumb margin10 img-thumbnail" style="width:200px">
+                     
+                         <em>Compétences rechercher: <span class="text-info">{{annonce.specialites}}</span></em>
+                    <article>
+                        <p>
+                         {{annonce.contenu}}   
+                        </p>
+                    </article>
+                    <a class="btn btn-blog pull-right marginBottom10" href="mailto:{{annonce.entreprise.email}}">Envoyer un mail</a> 
+            </div>
+
+        {% else %}
+        {% endfor %}
 {% endif %} 
         </div>
     </div>

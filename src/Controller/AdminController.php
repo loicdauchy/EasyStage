@@ -77,10 +77,22 @@ class AdminController extends AbstractController
             $manager->flush();
             return $this->redirectToRoute('admin_users');
         }
+
         $id = $user->getId();
         return $this->render('admin/edite.html.twig', [
             'user' => $user,
             'upForm' => $form->createView(),
+            'candidatures' => $repo->findByExampleField($id)
+        ]);
+    }
+
+    /**
+     * @Route("/infoU/{id}", name="infoU")
+     */
+    public function infoU(User $user,  CandidatureRepository $repo){
+        $id = $user->getId();
+        return $this->render('admin/infoU.html.twig', [
+            'user' => $user,
             'candidatures' => $repo->findByExampleField($id)
         ]);
     }

@@ -8,7 +8,7 @@
     <h2>Vous n'avez pas les droits</h2>
     <a href=" {{ path('security_login') }} "><button class="btn btn-primary">Connexion</button></a>
 
-{% else %}
+{% elseif app.user.id == user.id %}
 <div class="container centHeight">
     <div class="row centHeight justify-content-center align-items-center">
         <div class="col-12">
@@ -88,6 +88,16 @@
 
                 <button type="submit" class="btn btn-warning">Mettre à jour</button>
             {{ form_end(infoForm) }}
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container cent">
+    <div class="row cent justify-content-center align-items-center">
+        <div class="col-12">
+            <div class="alert alert-success" role="alert">
+                Silence is golden
+            </div>
         </div>
     </div>
 </div>

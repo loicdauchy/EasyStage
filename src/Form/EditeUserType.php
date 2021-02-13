@@ -22,7 +22,8 @@ class EditeUserType extends AbstractType
             ->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Admin' => 'ROLE_ADMIN',
-                    'Utilisateur' => 'ROLE_USER'
+                    'Utilisateur' => 'ROLE_USER',
+                    'Stagiaire' => 'ROLE_STAGIAIRE'
                 ],
                 'expanded' => true,
                 'multiple' => true,

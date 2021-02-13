@@ -88,17 +88,17 @@ class User implements UserInterface
     private $portfolio;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $github;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $pseudoGithub;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $CV;
 
@@ -108,17 +108,17 @@ class User implements UserInterface
     private $avatar;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $mobile;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $situation;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $mobileZone;
 
@@ -134,14 +134,19 @@ class User implements UserInterface
 
     /**
      * @ORM\ManyToOne(targetEntity=Promotion::class, inversedBy="apprenant")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $promo;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Annonce::class, mappedBy="entreprise")
+     */
+    private $annonces;
 
     public function __construct()
     {
         $this->candidatures = new ArrayCollection();
         $this->competences = new ArrayCollection();
+        $this->annonces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -441,6 +446,36 @@ class User implements UserInterface
     public function setPromo(?Promotion $promo): self
     {
         $this->promo = $promo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Annonce[]
+     */
+    public function getAnnonces(): Collection
+    {
+        return $this->annonces;
+    }
+
+    public function addAnnonce(Annonce $annonce): self
+    {
+        if (!$this->annonces->contains($annonce)) {
+            $this->annonces[] = $annonce;
+            $annonce->setEntreprise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnnonce(Annonce $annonce): self
+    {
+        if ($this->annonces->removeElement($annonce)) {
+            // set the owning side to null (unless already changed)
+            if ($annonce->getEntreprise() === $this) {
+                $annonce->setEntreprise(null);
+            }
+        }
 
         return $this;
     }
