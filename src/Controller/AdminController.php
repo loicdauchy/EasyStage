@@ -3,15 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Annonce;
 use App\Entity\Promotion;
 use App\Entity\Competence;
 use App\Entity\Entreprise;
+use App\Form\AnnonceAdminType;
 use App\Form\EditeUserType;
+use App\Form\PromotionType;
 use App\Form\CompetenceType;
 use App\Form\EntrepriseType;
-use App\Form\PromotionType;
 use App\Form\SearchEntrepriseType;
 use App\Repository\UserRepository;
+use App\Repository\AnnonceRepository;
 use App\Repository\PromotionRepository;
 use App\Repository\EntrepriseRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -75,7 +78,7 @@ class AdminController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $manager->persist($user);
             $manager->flush();
-            return $this->redirectToRoute('admin_users');
+            return $this->redirect($request->getUri());
         }
 
         $id = $user->getId();
@@ -171,6 +174,32 @@ class AdminController extends AbstractController
         return $this->render('admin/detailPromotion.html.twig', [
             'apprenants' => $repo->findByExampleField($id),
             'promo' => $promotion
+        ]);
+    }
+
+    /**
+     * @Route("/annonces", name="annonces")
+     */
+    public function annonces(AnnonceRepository $repo){
+        return $this->render('admin/annonces.html.twig', [
+            'annonces' => $repo->findAll()
+        ]);
+    }
+
+    /**
+     * @Route("/annonce/{id}", name="annonce")
+     */
+    public function adminAnnonces(Request $request, EntityManagerInterface $manager, Annonce $annonce){
+        $form = $this->createForm(AnnonceAdminType::class, $annonce);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $manager->persist($annonce);
+            $manager->flush();
+            return $this->redirectToRoute('admin_annonces');
+        }
+        return $this->render('admin/adminAnnonces.html.twig', [
+            'annonceForm' => $form->createView(),
+            'annonce' => $annonce
         ]);
     }
 }

@@ -58,13 +58,15 @@ class EntrepriseController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $annonce->setEntreprise($user);
+            $annonce->setStatus(0);
+            $date = new \DateTime();
+            $annonce->setCreatedAt($date);
             $manager->persist($annonce);
             $manager->flush();
             return $this->redirect($request->getUri());
         }
-
         return $this->render('entreprise/newAnnonce.html.twig', [
-            'annonceForm' => $form->createView()
+            'annonceForm' => $form->createView(),
         ]);
     }
 }

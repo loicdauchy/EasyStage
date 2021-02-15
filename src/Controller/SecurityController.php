@@ -39,9 +39,9 @@ class SecurityController extends AbstractController
      * @Route("/", name="security_login")
      */
     public function login(AnnonceRepository $repo){
-
+        $annonces = $repo->findAll();
         return $this->render('security/login.html.twig', [
-            'annonces' => $repo->findAll()
+            'annonces' => $annonces
         ]);
     }
 
@@ -71,4 +71,7 @@ class SecurityController extends AbstractController
             'registrationForm' => $form->createView()
         ]);
         }
+
+        
+       
 }

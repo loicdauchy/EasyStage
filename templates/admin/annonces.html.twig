@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+  Admin - Annonces
+{% endblock %}
+
+{% block body %}
+
+
+{% if not app.user %} 
+
+{% else %}
+<div class="container cent">
+    <div class="row cent justify-content-center align-items-center">
+        <div class="col-12 d-flex flex-column justify-content-center align-items-center">
+        {% for annonce in annonces %}
+        {% if annonce.status == 0 %}
+
+            <div class="col-md-10 blogShort mx-5 my-5">
+                     <h2>{{annonce.titre}}</h2><p>Posté le <span class="text-info">{{annonce.createdAt|date('d/m/Y')}}</span></p>
+                     <img src="{{annonce.entreprise.avatar}}" alt="post img" class="pull-left img-responsive thumb margin10 img-thumbnail" style="width:200px">
+                     
+                         <em>Compétences rechercher: <span class="text-info">{{annonce.specialites}}</span></em>
+                    <article>
+                        <p>
+                         {{annonce.contenu|raw}}   
+                        </p>
+                    </article>
+                    <a class="btn btn-blog btn-warning pull-right marginBottom10" href="{{path('admin_annonce', {'id': annonce.id})}}">Modérer</a> 
+            </div>
+            
+        {% else %}       
+        {% endif %}
+        {% endfor %}
+{% endif %} 
+        </div>
+    </div>
+</div>
+{% endblock %}
