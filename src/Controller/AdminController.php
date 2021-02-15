@@ -31,7 +31,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/", name="index")
      */
-    public function index(Request $request, EntityManagerInterface $manager): Response
+    public function index(Request $request, EntityManagerInterface $manager, AnnonceRepository $repoA): Response
     {
         $competence = new Competence();
         $formC = $this->createForm(CompetenceType::class, $competence);
@@ -42,7 +42,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_index');
         }
         return $this->render('admin/index.html.twig', [
-            'compForm' => $formC->createView()
+            'compForm' => $formC->createView(),
+            'annonces' => $repoA->findAll()
         ]);
     }
 
@@ -50,9 +51,10 @@ class AdminController extends AbstractController
      * Liste des utilisateurs
      * @Route("/users", name="users")
      */
-    public function userList(UserRepository $users){       
+    public function userList(UserRepository $users, AnnonceRepository $repoA){       
         return $this->render("admin/users.html.twig", [
-            'users' => $users->findAll()
+            'users' => $users->findAll(),
+            'annonces' => $repoA->findAll()
         ]);
     }
 
@@ -60,7 +62,7 @@ class AdminController extends AbstractController
      * Supprimer un utilisateur
      * @Route("/deleteU/{id}", name="deleteU")
      */
-    public function deleteU(EntityManagerInterface $manager, User $user): Response
+    public function deleteU(EntityManagerInterface $manager, User $user, AnnonceRepository $repoA): Response
     {
         $manager->remove($user);
         $manager->flush();
@@ -71,7 +73,7 @@ class AdminController extends AbstractController
      * @Route("/editeU/{id}", name="editeU")
      * 
      */
-    public function updateU(Request $request, EntityManagerInterface $manager, User $user,  CandidatureRepository $repo): Response
+    public function updateU(Request $request, EntityManagerInterface $manager, User $user,  CandidatureRepository $repo, AnnonceRepository $repoA): Response
     {
         $form = $this->createForm(EditeUserType::class, $user);
         $form->handleRequest($request);
@@ -85,25 +87,27 @@ class AdminController extends AbstractController
         return $this->render('admin/edite.html.twig', [
             'user' => $user,
             'upForm' => $form->createView(),
-            'candidatures' => $repo->findByExampleField($id)
+            'candidatures' => $repo->findByExampleField($id),
+            'annonces' => $repoA->findAll()
         ]);
     }
 
     /**
      * @Route("/infoU/{id}", name="infoU")
      */
-    public function infoU(User $user,  CandidatureRepository $repo){
+    public function infoU(User $user,  CandidatureRepository $repo, AnnonceRepository $repoA){
         $id = $user->getId();
         return $this->render('admin/infoU.html.twig', [
             'user' => $user,
-            'candidatures' => $repo->findByExampleField($id)
+            'candidatures' => $repo->findByExampleField($id),
+            'annonces' => $repoA->findAll()
         ]);
     }
 
     /**
      * @Route("/entreprises", name="entreprises")
      */
-    public function entreprise(EntrepriseRepository $repo, Request $request, EntrepriseRepository $entrepriseRepo){
+    public function entreprise(EntrepriseRepository $repo, Request $request, EntrepriseRepository $entrepriseRepo, AnnonceRepository $repoA){
 
         $entrepriseFind = [];
         $form = $this->createForm(SearchEntrepriseType::class);
@@ -114,14 +118,15 @@ class AdminController extends AbstractController
         return $this->render('admin/entreprise.html.twig', [
             'entreprises' => $repo->findAll(),
             'searchForm' => $form->createView(),
-            'entrepriseFind' => $entrepriseFind
+            'entrepriseFind' => $entrepriseFind,
+            'annonces' => $repoA->findAll()
         ]);
     }
 
     /**
      * @Route("/upEntreprise/{id}", name="upEntreprises")
      */
-    public function upEntreprise(Request $request, EntityManagerInterface $manager, Entreprise $entreprise){
+    public function upEntreprise(Request $request, EntityManagerInterface $manager, Entreprise $entreprise, AnnonceRepository $repoA){
         $form = $this->createForm(EntrepriseType::class, $entreprise);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
@@ -132,7 +137,8 @@ class AdminController extends AbstractController
 
         return $this->render('admin/upEntreprise.html.twig', [
             'upEntrepriseForm' => $form->createView(),
-            'entreprise' => $entreprise
+            'entreprise' => $entreprise,
+            'annonces' => $repoA->findAll()
         ]);
     }
 
@@ -140,7 +146,7 @@ class AdminController extends AbstractController
      * Supprimer une entreprise
      * @Route("/deleteE/{id}", name="deleteE")
      */
-    public function deleteE(EntityManagerInterface $manager, Entreprise $entreprise): Response
+    public function deleteE(EntityManagerInterface $manager, Entreprise $entreprise, AnnonceRepository $repoA): Response
     {
         $manager->remove($entreprise);
         $manager->flush();
@@ -150,7 +156,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/promotions", name="promotions")
      */
-    public function promotions(PromotionRepository $repo, Request $request, EntityManagerInterface $manager){
+    public function promotions(PromotionRepository $repo, Request $request, EntityManagerInterface $manager, AnnonceRepository $repoA){
         $promotion = new Promotion();
 
         $form = $this->createForm(PromotionType::class, $promotion);
@@ -162,18 +168,20 @@ class AdminController extends AbstractController
         }
         return $this->render('admin/promotions.html.twig', [
             'promotions' => $repo->findAll(),
-            'promoForm' => $form->createView()
+            'promoForm' => $form->createView(),
+            'annonces' => $repoA->findAll(),
         ]);
     }
 
     /**
      * @Route("/promotion/{id}", name="detailPromo")
      */
-    public function detailPromotion(UserRepository $repo, Promotion $promotion){
+    public function detailPromotion(UserRepository $repo, Promotion $promotion, AnnonceRepository $repoA){
         $id = $promotion->getId();
         return $this->render('admin/detailPromotion.html.twig', [
             'apprenants' => $repo->findByExampleField($id),
-            'promo' => $promotion
+            'promo' => $promotion,
+            'annonces' => $repoA->findAll()
         ]);
     }
 
@@ -189,7 +197,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/annonce/{id}", name="annonce")
      */
-    public function adminAnnonces(Request $request, EntityManagerInterface $manager, Annonce $annonce){
+    public function adminAnnonces(Request $request, EntityManagerInterface $manager, Annonce $annonce, AnnonceRepository $repoA){
         $form = $this->createForm(AnnonceAdminType::class, $annonce);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
@@ -199,7 +207,8 @@ class AdminController extends AbstractController
         }
         return $this->render('admin/adminAnnonces.html.twig', [
             'annonceForm' => $form->createView(),
-            'annonce' => $annonce
+            'annonce' => $annonce,
+            'annonces' => $repoA->findAll()
         ]);
     }
 }

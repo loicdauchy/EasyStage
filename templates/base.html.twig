@@ -42,6 +42,14 @@
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Admin
+                    {% set break2 = false %}
+                    {% for annonce in annonces %}
+                      {% if annonce.status == 0 and break2 == false %}
+                        <i class="fas fa-plus-circle text-info"></i>
+                        {% set break2 = true %}
+                      {% endif %}
+                    {% else %}
+                    {% endfor %}
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item text-warning" href="{{path('admin_promotions')}}">Promotions</a>
@@ -52,10 +60,13 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-warning" href="{{path('admin_annonces')}}">
                     Annonces
+                    {% set break = false %}
                     {% for annonce in annonces %}
-                      {% if annonce.status == 0 %}
-                        o
+                      {% if annonce.status == 0 and break == false %}
+                        <i class="fas fa-plus-circle text-info"></i>
+                        {% set break = true %}
                       {% endif %}
+                    {% else %}
                     {% endfor %}
                     </a>
                   </div>

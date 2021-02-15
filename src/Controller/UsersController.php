@@ -2,19 +2,20 @@
 
 namespace App\Controller;
 
-use App\Entity\Candidature;
 use App\Entity\User;
 use App\Entity\Competence;
 use App\Entity\Entreprise;
-use App\Form\CandidatureType;
 use App\Form\InfoUserType;
+use App\Entity\Candidature;
 use App\Form\CompetenceType;
 use App\Form\EntrepriseType;
+use App\Form\CandidatureType;
 use App\Form\UsersCompetenceType;
-use App\Repository\CandidatureRepository;
-use App\Repository\EntrepriseRepository;
 use App\Repository\UserRepository;
+use App\Repository\AnnonceRepository;
+use App\Repository\EntrepriseRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\CandidatureRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,7 +30,7 @@ class UsersController extends AbstractController
      * Information user
      * @Route("/infos/{id}", name="infoUser")
      */
-    public function infosUser(Request $request, EntityManagerInterface $manager, User $user): Response
+    public function infosUser(Request $request, EntityManagerInterface $manager, User $user, AnnonceRepository $repoA): Response
     {
         $form = $this->createForm(InfoUserType::class, $user);
         $form->handleRequest($request);
@@ -39,7 +40,8 @@ class UsersController extends AbstractController
         }
         return $this->render('users/index.html.twig', [
             'infoForm' => $form->createView(),
-            'user' => $user
+            'user' => $user,
+            'annonces' => $repoA->findAll()
         ]);
     }
 
@@ -47,7 +49,7 @@ class UsersController extends AbstractController
      * Ajout de nouvel compétences
      * @Route("/newSkill/{id}", name="skill")
      */
-    public function newCompetences(Request $request, EntityManagerInterface $manager, User $user){
+    public function newCompetences(Request $request, EntityManagerInterface $manager, User $user, AnnonceRepository $repoA){
         $form = $this->createForm(UsersCompetenceType::class, $user);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){         
@@ -66,14 +68,15 @@ class UsersController extends AbstractController
         }
         return $this->render('users/addSkill.html.twig', [
             'compForm' => $form->createView(),
-            'addComp' => $formC->createView()
+            'addComp' => $formC->createView(),
+            'annonces' => $repoA->findAll()
         ]);
     }
 
     /**
      * @Route("/entreprise", name="entreprise")
      */
-    public function entreprise(Request $request, EntityManagerInterface $manager, EntrepriseRepository $repo){
+    public function entreprise(Request $request, EntityManagerInterface $manager, EntrepriseRepository $repo, AnnonceRepository $repoA){
         $entreprise = new Entreprise();
         $form = $this->createForm(EntrepriseType::class, $entreprise);
         $form->handleRequest($request);
@@ -86,24 +89,26 @@ class UsersController extends AbstractController
 
         return $this->render('users/entreprise.html.twig', [
             'entrepriseForm' => $form->createView(),
-            'entreprises' => $repo->findAll()
+            'entreprises' => $repo->findAll(),
+            'annonces' => $repoA->findAll()
         ]);
     }
 
     /**
      * @Route("/detailEntreprise/{id}", name="detailEntreprise")
      */
-    public function detailEntreprise(EntrepriseRepository $repo, Entreprise $entreprise){
+    public function detailEntreprise(EntrepriseRepository $repo, Entreprise $entreprise, AnnonceRepository $repoA){
         $entreprise->getId();
         return $this->render('users/detailEntreprise.html.twig', [
-            'detailEntreprise' => $repo->find($entreprise)
+            'detailEntreprise' => $repo->find($entreprise),
+            'annonces' => $repoA->findAll()
         ]);
     }
 
     /**
      * @Route("/candidature", name="candidature")
      */
-    public function candidature(Request $request, EntityManagerInterface $manager, CandidatureRepository $repo){
+    public function candidature(Request $request, EntityManagerInterface $manager, CandidatureRepository $repo, AnnonceRepository $repoA){
         $candidature = new Candidature();
         $form = $this->createForm(CandidatureType::class, $candidature);
         $form->handleRequest($request);
@@ -118,14 +123,15 @@ class UsersController extends AbstractController
         $id = $user->getId();
         return $this->render('users/candidature.html.twig', [
             'candidatureForm' => $form->createView(),
-            'candidatures' => $repo->findByExampleField($id)
+            'candidatures' => $repo->findByExampleField($id),
+            'annonces' => $repoA->findAll()
         ]);   
     }
 
     /**
      * @Route("/upCandidature/{id}", name="upCandidature")
      */
-    public function upCandidature(Request $request, EntityManagerInterface $manager, Candidature $candidature){
+    public function upCandidature(Request $request, EntityManagerInterface $manager, Candidature $candidature, AnnonceRepository $repoA){
         $form = $this->createForm(CandidatureType::class, $candidature);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){         
@@ -135,7 +141,8 @@ class UsersController extends AbstractController
         }
 
         return $this->render('users/upCandidature.html.twig', [
-            'upCandidatureForm' => $form->createView()
+            'upCandidatureForm' => $form->createView(),
+            'annonces' => $repoA->findAll()
         ]);
     }
 }

@@ -7,8 +7,9 @@ use App\Entity\Annonce;
 use App\Form\AnnonceType;
 use App\Form\SearchStagiaireType;
 use App\Repository\UserRepository;
-use App\Repository\CandidatureRepository;
+use App\Repository\AnnonceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\CandidatureRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,7 +24,7 @@ class EntrepriseController extends AbstractController
     /**
      * @Route("/stagiaires", name="stagiaires")
      */
-    public function index(UserRepository $repo, Request $request): Response
+    public function index(UserRepository $repo, Request $request, AnnonceRepository $repoA): Response
     {
         $stagiaireFind = [];
         $form = $this->createForm(SearchStagiaireType::class);
@@ -35,24 +36,26 @@ class EntrepriseController extends AbstractController
             'stagiaires' => $repo->findStagiaire(),
             'searchForm' => $form->createView(),
             'stagiaireFind' => $stagiaireFind,
+            'annonces' => $repoA->findAll()
         ]);
     }
 
     /**
      * @Route("/stagiaires/{id}", name="infoStagiaire")
      */
-    public function infoS(User $user,  CandidatureRepository $repo){
+    public function infoS(User $user,  CandidatureRepository $repo, AnnonceRepository $repoA){
         $id = $user->getId();
         return $this->render('entreprise/infoS.html.twig', [
             'user' => $user,
-            'candidatures' => $repo->findByExampleField($id)
+            'candidatures' => $repo->findByExampleField($id),
+            'annonces' => $repoA->findAll()
         ]);
     }
 
     /**
      * @Route("/annoncePost/{id}", name="newAnnonce")
      */
-    public function newAnnonce(Request $request, EntityManagerInterface $manager, User $user){
+    public function newAnnonce(Request $request, EntityManagerInterface $manager, User $user, AnnonceRepository $repoA){
         $annonce = new Annonce();
         $form = $this->createForm(AnnonceType::class, $annonce);
         $form->handleRequest($request);
@@ -67,6 +70,7 @@ class EntrepriseController extends AbstractController
         }
         return $this->render('entreprise/newAnnonce.html.twig', [
             'annonceForm' => $form->createView(),
+            'annonces' => $repoA->findAll()
         ]);
     }
 }
